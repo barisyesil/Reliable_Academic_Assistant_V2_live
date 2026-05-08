@@ -1,10 +1,17 @@
+import ssl
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from app.core.config import settings
+
+# SSL Ayarı (Bulut bağlantıları için şart)
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
 
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
+    # Eğer adres supabase veya pooler içeriyorsa SSL kullan:
+    connect_args={"ssl": ctx} if any(x in settings.DATABASE_URL for x in ["supabase", "pooler"]) else {}
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -12,7 +19,6 @@ AsyncSessionLocal = async_sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False,
 )
-
 
 async def get_db():
     async with AsyncSessionLocal() as session:
@@ -24,9 +30,8 @@ async def get_db():
         finally:
             await session.close()
 
-
 async def init_db():
     from app.models.models import Base
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    print("[DB] Tablolar oluşturuldu / güncellendi.")
+    print("[DB] Supabase (Pooler üzerinden) tablolar başarıyla oluşturuldu.")
