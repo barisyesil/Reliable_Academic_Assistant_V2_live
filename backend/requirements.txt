@@ -1,26 +1,29 @@
-# Web Framework
+# Web Framework & Server
 fastapi>=0.115.0
 uvicorn[standard]
 python-multipart
+gunicorn
 
-# Database
+# Database (Supabase için şart)
 sqlalchemy[asyncio]
-aiosqlite
+asyncpg
+psycopg2-binary
 
-# Auth & Security
+# Auth & Security (Özellikle bcrypt versiyonuna dikkat)
 python-jose[cryptography]
-passlib[bcrypt]>=3.2.2
+passlib[bcrypt]==1.7.4
+bcrypt==3.2.2
 
-# LangChain & AI (Versiyon çakışmalarını önlemek için esnek bırakıldı)
+# LangChain & AI
 langchain
 langchain-core>=0.3.29
 langchain-groq
 langchain-huggingface
-langchain-chroma
+langchain-pinecone
 langchain-community
 
 # Vector DB & Processing
-chromadb
+pinecone-client
 sentence-transformers
 pymupdf
 
