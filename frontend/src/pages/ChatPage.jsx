@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Send, AlertTriangle, FileText, Plus, Trash2, MessageSquare } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+// Dosyanın en üst kısımlarına ekle
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://reliable-academic-assistant-v2-live.onrender.com';
 
 const WELCOME_MSG = {
   id: 'welcome',
@@ -151,7 +153,7 @@ export default function ChatPage() {
 
   const getDocUrl = (category, filename) =>
     `${BASE_URL}/api/document/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`
-  
+
   return (
     <div className="flex h-full bg-bg-main overflow-hidden">
 

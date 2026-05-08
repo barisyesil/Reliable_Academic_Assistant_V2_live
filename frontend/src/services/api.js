@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // 1. URL'i tek bir yerden, doğru şekilde alıyoruz
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://reliable-academic-assistant-v2-live.onrender.com';
+const BASE_URL = 'https://reliable-academic-assistant-v2-live.onrender.com';
 
 // 2. 'api' nesnesini SADECE BİR KEZ oluşturuyoruz
 const api = axios.create({
