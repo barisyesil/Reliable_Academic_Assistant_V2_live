@@ -1,24 +1,22 @@
 import axios from 'axios'
 
-//const BASE_URL = import.meta.env.VITE_API_URL || 'https://reliable-academic-assistant-v2-live.onrender.com';
+// 1. URL'i tek bir yerden, doğru şekilde alıyoruz
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://reliable-academic-assistant-v2-live.onrender.com';
 
+// 2. 'api' nesnesini SADECE BİR KEZ oluşturuyoruz
 const api = axios.create({
-  baseURL: BASE_URL, 
-  headers: { 'Content-Type': 'application/json' },
-})
-const api = axios.create({
-  baseURL: 'https://reliable-academic-assistant-v2-live.onrender.com',
+  baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 })
 
-// Her istekte access token ekle
+// 3. İsteklere token ekleme mantığı
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('access_token')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
-// 401 → token yenile, başarısız olursa login'e yönlendir
+// 4. Refresh token ve hata yönetimi (api değişkenini tekrar tanımlamadan!)
 let isRefreshing = false
 let failedQueue = []
 
@@ -54,12 +52,13 @@ api.interceptors.response.use(
       }
 
       try {
+        // Burada axios.post yerine api.post kullanıyoruz
         const { data } = await api.post('/api/auth/refresh', {
           refresh_token: refreshToken,
         })
         localStorage.setItem('access_token', data.access_token)
         localStorage.setItem('refresh_token', data.refresh_token)
-        api.defaults.headers.common.Authorization = `Bearer ${data.access_token}`
+        
         processQueue(null, data.access_token)
         original.headers.Authorization = `Bearer ${data.access_token}`
         return api(original)
