@@ -1,9 +1,10 @@
 import os
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_pinecone import PineconeVectorStore
 from dotenv import load_dotenv
+from langchain_huggingface import HuggingFaceEndpointEmbeddings # <-- İndiren değil, API'ye bağlanan modül
+from langchain_pinecone import PineconeVectorStore
 
 load_dotenv()
+
 _vector_store = None
 
 def get_vector_store() -> PineconeVectorStore:
@@ -15,22 +16,25 @@ def get_vector_store() -> PineconeVectorStore:
 def init_rag() -> PineconeVectorStore:
     global _vector_store
     
-    # 1. Embedding Modelini Yükle
-    print("[RAG] BGE-M3 embedding modeli yükleniyor...")
-    embeddings = HuggingFaceEmbeddings(
-        model_name="BAAI/bge-m3",
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
+    hf_token = os.getenv("HF_TOKEN")
+    if not hf_token:
+        raise ValueError("[RAG] HATA: .env dosyasında HF_TOKEN bulunamadı!")
+
+    print("[RAG] HuggingFace API üzerinden embedding modeline bağlanılıyor...")
+    
+    # DİKKAT: Artık modeli RAM'e indirmiyoruz!
+    embeddings = HuggingFaceEndpointEmbeddings(
+        model="BAAI/bge-m3",
+        task="feature-extraction",
+        huggingfacehub_api_token=hf_token
     )
 
-    # 2. Pinecone API Anahtarını ve Index Adını Al
     pinecone_api_key = os.getenv("PINECONE_API_KEY")
-    index_name = "estu-index" # Pinecone panelinde oluşturduğun isim
+    index_name = "estu-index"
 
     if not pinecone_api_key:
         raise ValueError("[RAG] HATA: .env dosyasında PINECONE_API_KEY bulunamadı!")
 
-    # 3. Pinecone Bulut Bağlantısını Kur
     print(f"[RAG] Pinecone Bulut Veritabanına bağlanılıyor (Index: {index_name})...")
     
     _vector_store = PineconeVectorStore(
