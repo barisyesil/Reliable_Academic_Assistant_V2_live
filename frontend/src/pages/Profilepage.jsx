@@ -46,8 +46,8 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col h-full bg-bg-main transition-colors duration-300">
-      <div className="h-14 bg-bg-side border-b border-border-subtle flex items-center px-5 pl-14 lg:px-5 gap-3 flex-shrink-0">
-        <User size={16} className="text-estu-red flex-shrink-0" />
+      <div className="h-14 bg-bg-side border-b border-border-subtle flex items-center px-5 pl-14 lg:px-5 gap-3 shrink-0">
+        <User size={16} className="text-estu-red shrink-0" />
         <h1 className="font-syne text-[15px] font-bold text-text-main flex-1">Profilim</h1>
       </div>
 
