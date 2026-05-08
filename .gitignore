@@ -1,0 +1,37 @@
+# ========================
+# Python & Backend
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Sanal Ortamlar
+venv/
+env/
+.venv/
+
+# Çevresel Değişkenler (API KEY'ler asla GitHub'a atılmaz!)
+.env
+.env.local
+
+# İlişkisel Veritabanı (Kullanıcı hesapları ve şifreleri)
+*.db
+*.sqlite3
+
+# NOT: Vektör veritabanı klasörü (örn: chroma_data veya chroma_db) 
+# bilerek buraya eklenmemiştir çünkü GitHub'a yüklenmesi istenmektedir.
+
+# ========================
+# Node & Frontend
+# ========================
+node_modules/
+dist/
+build/
+.npm/
+
+# ========================
+# İşletim Sistemi
+# ========================
+.DS_Store
+Thumbs.db
