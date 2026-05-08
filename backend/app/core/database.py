@@ -2,16 +2,22 @@ import ssl
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from app.core.config import settings
 
-# SSL Ayarı: IPv4 üzerinden Pooler'a bağlanırken güvenliği sağlar
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
+# Supabase Pooler için ekstra ayarları belirliyoruz
+connect_args = {
+    "ssl": ctx,
+    "statement_cache_size": 0,          # PgBouncer çakışmasını engeller
+    "prepared_statement_cache_size": 0  # PgBouncer çakışmasını engeller
+} if "sqlite" not in settings.DATABASE_URL else {}
+
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
-    # Sadece sqlite değilse (yani supabase ise) SSL kullan
-    connect_args={"ssl": ctx} if "sqlite" not in settings.DATABASE_URL else {}
+    connect_args=connect_args,
+    pool_pre_ping=True, # Kopan bağlantıları otomatik test edip yeniler (Bulut için şarttır)
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -19,7 +25,6 @@ AsyncSessionLocal = async_sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False,
 )
-
 async def get_db():
     async with AsyncSessionLocal() as session:
         try:

@@ -1,9 +1,9 @@
 import re
 from langchain.tools import tool
-from langchain_chroma import Chroma
+from langchain_pinecone import PineconeVectorStore # <-- Chroma yerine Pinecone geldi
 
 
-def make_agent_tools(vector_store: Chroma, user_data: dict) -> list:
+def make_agent_tools(vector_store: PineconeVectorStore, user_data: dict) -> list:
     """
     Her istek için kullanıcıya özel tool seti üretir.
     user_data = db_service.get_user_academic_summary() çıktısı.
