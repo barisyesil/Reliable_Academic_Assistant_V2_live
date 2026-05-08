@@ -53,9 +53,11 @@ app = FastAPI(
 )
 
 # CORS
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=["*"], # Canlıda burayı Vercel linkinle değiştireceğiz
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
