@@ -150,8 +150,8 @@ export default function ChatPage() {
   }
 
   const getDocUrl = (category, filename) =>
-    `http://localhost:8000/api/document/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`
-
+    `${BASE_URL}/api/document/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`
+  
   return (
     <div className="flex h-full bg-bg-main overflow-hidden">
 

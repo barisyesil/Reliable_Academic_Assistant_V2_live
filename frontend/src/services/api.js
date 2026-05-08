@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://reliable-academic-assistant-v2-live.onrender.com',
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -48,7 +48,7 @@ api.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post('http://localhost:8000/api/auth/refresh', {
+        const { data } = await api.post('/api/auth/refresh', {
           refresh_token: refreshToken,
         })
         localStorage.setItem('access_token', data.access_token)
