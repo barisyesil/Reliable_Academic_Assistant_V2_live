@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from 'react'
 import { Send, AlertTriangle, FileText, Plus, Trash2, MessageSquare } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+// Dosyanın en üst kısımlarına ekle
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm' // GitHub Flavored Markdown eklentisi
 import 'github-markdown-css/github-markdown.css' // GitHub CSS'i
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://reliable-academic-assistant-v2-live.onrender.com';
 
 const WELCOME_MSG = {
   id: 'welcome',
@@ -153,7 +155,7 @@ export default function ChatPage() {
   }
 
   const getDocUrl = (category, filename) =>
-    `http://localhost:8000/api/document/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`
+    `${BASE_URL}/api/document/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`
 
   return (
     <div className="flex h-full bg-bg-main overflow-hidden">
@@ -228,7 +230,7 @@ export default function ChatPage() {
                     : 'bg-blue-500/10 text-blue-500 border border-blue-500/20'}`}>
                   {msg.role === 'assistant' ? 'AI' : (user?.full_name?.[0] || 'S')}
                 </div>
-                
+
                 {/* --- GitHub Stili Markdown Entegrasyonu Başlangıcı --- */}
                 <div className={`max-w-[85%] px-3.5 py-2.5 rounded-xl text-[13.5px] font-sans leading-relaxed
                   ${msg.role === 'assistant'
@@ -258,7 +260,6 @@ export default function ChatPage() {
                   )}
                 </div>
                 {/* --- GitHub Stili Markdown Entegrasyonu Sonu --- */}
-                
               </div>
 
               {msg.sources && msg.sources.length > 0 && (
